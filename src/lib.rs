@@ -9,13 +9,34 @@
     * Printing all lines before the first instance of the pattern  
     * Printing all lines after the first instance of the pattern  
     ## Installation
-    
-*/
+    Add this to your Cargo.toml
+    ```toml
+    libgrep-rs = { git = "https://github.com/Pyrerune/libgrep-rs.git" }
+    ```
+    ## Example
+    ```no_run
+    use libgrep_rs::searcher::Searcher;
+    use libgrep_rs::options::Options;
 
+    fn main() {
+        let options = Options::default();
+        let text = String::from("Hello World\n libgrep-rs test");
+        let pattern = String::from("World");
+        let searcher = Searcher::new(pattern, text, options);
+        let output = searcher.search();
+        println!("{}", output);
+    }
+    ```
+    If it worked, the output will be
+    ```txt
+    Hello World
+    ```
+*/
 pub mod searcher;
 pub mod options;
 #[cfg(test)]
 mod tests {
+    
     use crate::searcher::Searcher;
     use crate::options::Options;
     #[test]
