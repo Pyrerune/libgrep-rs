@@ -6,7 +6,7 @@ Searching through files
 Searching through standard input  
 Excluding patterns  
 Printing all lines before the first instance of the pattern  
-Printing all lines after the first instance of the pattern
+Printing all lines after the first instance of the pattern  
 (NEW) Case Insensitivity  
 #### Examples  
 Examples take place in hypothetical directory containing  
