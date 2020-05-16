@@ -7,11 +7,12 @@
     * Searching through text that includes specific patterns
     * Searching through text that excludes specific patterns
     * Printing all lines before the first instance of the pattern  
-    * Printing all lines after the first instance of the pattern  
+    * Printing all lines after the first instance of the pattern 
+    * Case Insensitivity 
     ## Installation
     Add this to your Cargo.toml
     ```toml
-    libgrep-rs = "0.1.0"
+    libgrep-rs = "0.1.1"
     ```
     ## Example
     ```no_run
