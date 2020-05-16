@@ -2,6 +2,7 @@
 name = "libgrep-rs"
 version = "0.1.0"
 description = "A tool for searching through text"
+repository = "https://github.com/Pyrerune/libgrep-rs"
 documentation = "https://pyrerune.github.io/libgrep-rs/docs"
 license = "GPL-3.0"
 authors = ["Pyrerune <pyrerune@gmail.com>"]

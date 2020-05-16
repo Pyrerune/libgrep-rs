@@ -11,33 +11,25 @@ pub struct Searcher {
 }
 impl Searcher {
     pub fn new(p: String, t: String, o: Options) -> Searcher {
+        let mut pattern = p.clone();
+        let mut search_text = t.clone();
+        if o.case_insensitive == true {
+            pattern = p.to_lowercase();
+            search_text = t.to_lowercase();
+        }
         Searcher {
-            pattern: p,
-            search_text: t,
+            pattern,
+            search_text,
             options: o
         }
     }
     pub fn search(&self) -> String {
         let mut found: bool = false;
+
         let list: Vec<&str> = self.search_text.split("\n").collect();
         
         let mut return_string = String::new();
         
-/*if self.options.exclude == true {
-            for i in list.clone() {
-                if !i.contains(self.pattern.as_str()) {
-                    return_string.push_str(i);
-                    return_string.push_str("\n");
-                }
-            }
-        } else if self.options.exclude == false {
-            for i in list.clone() {
-                if i.contains(self.pattern.as_str()) {
-                    return_string.push_str(i);
-                    return_string.push_str("\n");
-                }
-            }
-        }*/
         if self.options.include_before == true {
             for i in list.clone() {
                 if i.contains(self.pattern.as_str()) {

@@ -11,7 +11,7 @@
     ## Installation
     Add this to your Cargo.toml
     ```toml
-    libgrep-rs = { git = "https://github.com/Pyrerune/libgrep-rs.git" }
+    libgrep-rs = "0.1.0"
     ```
     ## Example
     ```no_run
@@ -41,7 +41,7 @@ mod tests {
     use crate::options::Options;
     #[test]
     fn exclude() {
-        let options = Options::new(true, false, false);
+        let options = Options::new(true, false, false, false);
         let text = String::from("Steve Jobs Passed Away\nGates thrilled");
         let searcher = Searcher::new(String::from("Jobs"), text, options);
         let assert_text: String = String::from("Gates thrilled");
@@ -53,7 +53,7 @@ mod tests {
     }
     #[test]
     fn include() {
-        let options = Options::new(false, false, false);
+        let options = Options::new(false, false, false, false);
         let text = String::from("Steve Jobs Passed Away\nGates thrilled");
         let searcher = Searcher::new(String::from("Jobs"), text, options);
         let assert_text: String = String::from("Steve Jobs Passed Away");
@@ -66,7 +66,7 @@ mod tests {
     }
     #[test]
     fn include_before() {
-        let options = Options::new(false, true, false);
+        let options = Options::new(false, true, false, false);
         let text = String::from("Steve Jobs Passed Away\nGates thrilled\nApple Fans Devastated\nGates Thrilled and Devastated");
         let searcher = Searcher::new(String::from("Gates"), text, options);
         let assert_text: String = String::from("Steve Jobs Passed Away Gates thrilled Gates Thrilled and Devastated");
@@ -85,7 +85,7 @@ mod tests {
     }
     #[test]
     fn include_after() {
-        let options = Options::new(false, false, true);
+        let options = Options::new(false, false, true, false);
         let text = String::from("Steve Jobs Passed Away\nGates thrilled\nApple Fans Devastated");
         let searcher = Searcher::new(String::from("Gates"), text, options);
         let assert_text: String = String::from("Gates thrilled Apple Fans Devastated");
@@ -100,6 +100,23 @@ mod tests {
             }
             println!("test: {}", return_text);
         }
+        assert_eq!(assert_text, return_text);
+    }
+   
+    #[test]
+    fn case_insensitive() {
+        let options = Options::new(false, false, false, true);
+        let text = String::from("Steve Jobs Passed Away\nGates thrilled\n Steve jobs hasn't passed away");
+        let searcher = Searcher::new(String::from("Jobs"), text, options);
+        let assert_text: String = String::from("Steve Jobs Passed Away Steve jobs hasn't passed away").to_lowercase();
+        let mut return_text: String = searcher.search();
+        if return_text.contains("\n") {
+            return_text.remove(return_text.find("\n").unwrap());
+        }
+        if return_text.ends_with("\n") {
+            return_text.remove(return_text.len()-1);
+        }
+
         assert_eq!(assert_text, return_text);
     }
 }
