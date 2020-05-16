@@ -38,5 +38,5 @@ output:
 Basic_file_3.txt  
 Basic_file_4.txt  
 ##### Case Insensitivity  
-ls | grep-rs -c basic_file_3
+ls | grep-rs -c basic_file_3  
 output: basic_file_3.txt
