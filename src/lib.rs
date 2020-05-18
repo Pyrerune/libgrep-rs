@@ -13,7 +13,7 @@
     ## Installation
     Add this to your Cargo.toml
     ```toml
-    libgrep-rs = "0.1.1"
+    libgrep-rs = "0.1.2"
     ```
     ## Example
     ```no_run
@@ -33,6 +33,7 @@
     ```txt
     Hello World
     ```
+    You can see other examples in the examples/ directory
 */
 
 pub mod searcher;
