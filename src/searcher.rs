@@ -1,7 +1,7 @@
 //! Contains structs used for searching through text
-
 use crate::options::Options;
-
+use regex::Regex;
+use std::process::exit;
 ///Searches through text for the given pattern
 #[derive(Clone)]
 pub struct Searcher {
@@ -30,50 +30,43 @@ impl Searcher {
         
         let mut return_string = String::new();
         
-        if self.options.include_before == true {
-            for i in list.clone() {
-                if i.contains(self.pattern.as_str()) {
-                    if self.options.exclude == false {
-                        return_string.push_str(i);
-                        return_string.push_str("\n");
-                    }
-                    found = true;
+        for i in list.clone() {
+            if self.options.regex == true {
+                
+                let regex = Regex::new(self.pattern.as_str());
+                if regex.is_err() {
+                    eprintln!("Invalid Regex");
+                    exit(1);
+                } else if regex.unwrap().is_match(i) {
+                    return_string.push_str(i);
+                    return_string.push_str("\n");
                 }
+            }
+            if i.contains(self.pattern.as_str()) {
+
+                if self.options.exclude == false {
+                    return_string.push_str(i);
+                    return_string.push_str("\n");
+                }
+                found = true;
+            } else if self.options.exclude == true {
+                    return_string.push_str(i);
+                    return_string.push_str("\n");
+                
+                
+            } else if self.options.include_before == true {
                 if found == false {
                     return_string.push_str(i);
                     return_string.push_str("\n");
                 }
-            }
-        } else if self.options.include_after == true {
-            for i in list.clone() {
-
-                if i.contains(self.pattern.as_str()) {
-                    if self.options.exclude == false {
-                        return_string.push_str(i);
-                        return_string.push_str("\n");
-                    }
-                    found = true;
-                } else if found == true {
-                    return_string.push_str(i);
-                    return_string.push_str("\n");
-                }
-
-            }
-        } else {
-        for i in list {
-            if self.options.exclude == true {
-                if !i.contains(self.pattern.as_str()) {
-                    return_string.push_str(i);
-                    return_string.push_str("\n")
-                }
-            } else if self.options.exclude == false {
-                if i.contains(self.pattern.as_str()) {
+            } else if self.options.include_after == true {
+                if found == true {
                     return_string.push_str(i);
                     return_string.push_str("\n");
                 }
             }
         }
-        }
+ 
         return_string
     }
 }
