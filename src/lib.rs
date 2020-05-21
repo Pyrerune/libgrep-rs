@@ -13,7 +13,7 @@
     ## Installation
     Add this to your Cargo.toml
     ```toml
-    libgrep-rs = "0.1.2"
+    libgrep-rs = "0.1.3"
     ```
     ## Example
     ```no_run
@@ -24,7 +24,9 @@
         let options = Options::default();
         let text = String::from("Hello World\n libgrep-rs test");
         let pattern = String::from("World");
-        let searcher = Searcher::new(pattern, text, options);
+        let searcher = Searcher::new(pattern, text, options, Some(String::from("\n")));
+        //Some(String::from("\n")) is the deliminator, it could be anything
+        //If set to None, it will use the default "\n"
         let output = searcher.search();
         println!("{}", output);
     }
@@ -45,9 +47,12 @@ mod tests {
     use crate::options::Options;
     #[test]
     fn exclude() {
-        let options = Options::new(true, false, false, false, false);
+        let options = Options {
+            exclude: true,
+            ..Options::default()
+        };
         let text = String::from("Steve Jobs Passed Away\nGates thrilled");
-        let searcher = Searcher::new(String::from("Jobs"), text, options);
+        let searcher = Searcher::new(String::from("Jobs"), text, options, None);
         let assert_text: String = String::from("Gates thrilled");
         let mut return_text: String = searcher.search();
         if return_text.contains("\n") {
@@ -59,7 +64,7 @@ mod tests {
     fn include() {
         let options = Options::default();
         let text = String::from("Steve Jobs Passed Away\nGates thrilled");
-        let searcher = Searcher::new(String::from("Jobs"), text, options);
+        let searcher = Searcher::new(String::from("Jobs"), text, options, None);
         let assert_text: String = String::from("Steve Jobs Passed Away");
         let mut return_text: String = searcher.search();
         if return_text.contains("\n") {
@@ -70,9 +75,12 @@ mod tests {
     }
     #[test]
     fn include_before() {
-        let options = Options::new(false, true, false, false, false);
+        let options = Options {
+            include_before: true,
+            ..Options::default()
+        };
         let text = String::from("Steve Jobs Passed Away\nGates thrilled\nApple Fans Devastated\nGates Thrilled and Devastated");
-        let searcher = Searcher::new(String::from("Gates"), text, options);
+        let searcher = Searcher::new(String::from("Gates"), text, options, None);
         let assert_text: String = String::from("Steve Jobs Passed Away Gates thrilled Gates Thrilled and Devastated");
         let mut return_text: String = searcher.search();
         if return_text.contains("\n") {
@@ -89,9 +97,12 @@ mod tests {
     }
     #[test]
     fn include_after() {
-        let options = Options::new(false, false, true, false, false);
+        let options = Options {
+            include_after: true,
+            ..Options::default()
+        };
         let text = String::from("Steve Jobs Passed Away\nGates thrilled\nApple Fans Devastated");
-        let searcher = Searcher::new(String::from("Gates"), text, options);
+        let searcher = Searcher::new(String::from("Gates"), text, options, None);
         let assert_text: String = String::from("Gates thrilled Apple Fans Devastated");
         let mut return_text: String = searcher.search();
         if return_text.contains("\n") {
@@ -109,9 +120,12 @@ mod tests {
    
     #[test]
     fn case_insensitive() {
-        let options = Options::new(false, false, false, true, false);
+        let options = Options {
+            case_insensitive: true,
+            ..Options::default()
+        };
         let text = String::from("Steve Jobs Passed Away\nGates thrilled\n Steve jobs hasn't passed away");
-        let searcher = Searcher::new(String::from("Jobs"), text, options);
+        let searcher = Searcher::new(String::from("Jobs"), text, options, None);
         let assert_text: String = String::from("Steve Jobs Passed Away Steve jobs hasn't passed away").to_lowercase();
         let mut return_text: String = searcher.search();
         if return_text.contains("\n") {
@@ -125,9 +139,12 @@ mod tests {
     }
     #[test]
     fn regex() {
-        let options = Options::new(false, false, false, false, true);
+        let options = Options {
+            regex: true,
+            ..Options::default()
+        };
         let text = String::from("Steve Jobs Passed Away on 2020-05-18\nHe passed away at exactly midnight as he didn't like being late");
-        let searcher = Searcher::new(String::from(r"\d"), text, options);
+        let searcher = Searcher::new(String::from(r"\d"), text, options, None);
         let assert_text = String::from("Steve Jobs Passed Away on 2020-05-18");
         let mut return_text: String = searcher.search();
         if return_text.contains("\n") {
@@ -137,6 +154,18 @@ mod tests {
             return_text.remove(return_text.len()-1);
         }
 
+        assert_eq!(assert_text, return_text);
+    }
+    #[test]
+    fn custom_delim() {
+        let options = Options::default();
+        let text = String::from("Steve Jobs Passed Away\nGates thrilled");
+        let searcher = Searcher::new(String::from("Jobs"), text, options, Some(String::from(" ")));
+        let assert_text: String = String::from("Jobs");
+        let mut return_text: String = searcher.search();
+        if return_text.contains("\n") {
+            return_text.remove(return_text.find("\n").unwrap());
+        }
         assert_eq!(assert_text, return_text);
     }
 }

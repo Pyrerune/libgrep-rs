@@ -23,13 +23,14 @@ impl Default for Options {
     }
 }
 impl Options {
-    pub fn new(e: bool, ib: bool, ia: bool, cs: bool, r: bool) -> Options {
+    pub fn new(exclude: bool, include_before: bool, include_after: bool,
+         case_insensitive: bool, regex: bool) -> Options {
         Options {
-            exclude: e,
-            include_before: ib,
-            include_after: ia,
-            case_insensitive: cs,
-            regex: r,
+            exclude,
+            include_before,
+            include_after,
+            case_insensitive,
+            regex,
         }
     }
 }

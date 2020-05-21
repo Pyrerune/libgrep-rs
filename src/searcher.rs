@@ -8,25 +8,31 @@ pub struct Searcher {
     pub pattern: String,
     pub search_text: String,
     pub options: Options,
+    pub deliminator: String
 }
 impl Searcher {
-    pub fn new(p: String, t: String, o: Options) -> Searcher {
+    pub fn new(p: String, t: String, o: Options, d: Option<String>) -> Searcher {
         let mut pattern = p.clone();
         let mut search_text = t.clone();
+        let mut delim = String::from("\n");
         if o.case_insensitive == true {
             pattern = p.to_lowercase();
             search_text = t.to_lowercase();
         }
+        if d.is_some() {
+            delim = d.unwrap();
+        }
         Searcher {
             pattern,
             search_text,
-            options: o
+            options: o,
+            deliminator: delim,
         }
     }
     pub fn search(&self) -> String {
         let mut found: bool = false;
 
-        let list: Vec<&str> = self.search_text.split("\n").collect();
+        let list: Vec<&str> = self.search_text.split(self.deliminator.as_str()).collect();
         
         let mut return_string = String::new();
         
