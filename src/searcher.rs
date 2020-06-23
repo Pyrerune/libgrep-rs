@@ -35,7 +35,7 @@ impl Searcher {
         let list: Vec<&str> = self.search_text.split(self.deliminator.as_str()).collect();
         
         let mut return_string = String::new();
-        
+        let mut len = 0;
         for i in list.clone() {
             if self.options.regex == true {
                 
@@ -51,6 +51,10 @@ impl Searcher {
             if i.contains(self.pattern.as_str()) {
 
                 if self.options.exclude == false {
+                    if self.options.show_line == true {
+                        return_string.push_str(format!("found at line: {}\n", len).as_str());
+
+                    }
                     return_string.push_str(i);
                     return_string.push_str("\n");
                 }
@@ -70,6 +74,8 @@ impl Searcher {
                     return_string.push_str(i);
                     return_string.push_str("\n");
                 }
+            } else {
+                len += 1;
             }
         }
  

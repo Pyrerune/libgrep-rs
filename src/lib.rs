@@ -117,7 +117,6 @@ mod tests {
         }
         assert_eq!(assert_text, return_text);
     }
-   
     #[test]
     fn case_insensitive() {
         let options = Options {
@@ -166,6 +165,19 @@ mod tests {
         if return_text.contains("\n") {
             return_text.remove(return_text.find("\n").unwrap());
         }
+        assert_eq!(assert_text, return_text);
+    }
+    #[test]
+    fn show_line() {
+        let options = Options {
+            show_line: true,
+            ..Options::default()
+        };
+        let text = String::from("Steve Jobs Passed Away\nGates thrilled");
+        let searcher = Searcher::new(String::from("Jobs"), text, options, None);
+        let assert_text: String = String::from("found at line: 0\nSteve Jobs Passed Away\n");
+        let mut return_text: String = searcher.search();
+
         assert_eq!(assert_text, return_text);
     }
 }
