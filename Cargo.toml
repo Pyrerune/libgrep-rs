@@ -1,6 +1,6 @@
 [package]
 name = "libgrep-rs"
-version = "0.1.3"
+version = "0.1.4"
 description = "A tool for searching through text"
 repository = "https://github.com/Pyrerune/libgrep-rs"
 documentation = "https://pyrerune.github.io/libgrep-rs/docs"
